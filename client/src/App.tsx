@@ -223,6 +223,7 @@ function App() {
               boxSizing: "border-box",
               display: "inline-flex",
               marginTop: "1em",
+              marginBottom: "1em"
             }}
           >
             <Button
