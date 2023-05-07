@@ -1,0 +1,38 @@
+version: "3.3"
+
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - ${API_PORT}:${API_PORT}
+    expose:
+      - ${API_PORT}
+    environment:
+      - COHERE_API_KEY=${COHERE_API_KEY}
+      - MODEL=${MODEL}
+      - DEEPGRAM_KEY=${DEEPGRAM_KEY}
+    env_file:
+      - .env
+    networks:
+      - tobi-lass-net
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - ${CLIENT_PORT}:${CLIENT_PORT}
+    expose:
+      - ${CLIENT_PORT}
+    environment:
+      - VITE_API_ENDPOINT=${VITE_API_ENDPOINT}
+    env_file:
+      - .env
+    networks:
+      - tobi-lass-net
+
+networks:
+  tobi-lass-net:
+    # external: true
+    # name: host

@@ -1,0 +1,9 @@
+fastapi
+cohere
+uvicorn[standard]
+ffmpeg
+moviepy
+pytube
+deepgram-sdk
+python-multipart
+python-dotenv
