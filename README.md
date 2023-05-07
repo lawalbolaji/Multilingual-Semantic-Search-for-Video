@@ -4,6 +4,8 @@ We've all wanted to just skip to the part of a video that has the information we
 
 This project was built a submission for Cohere's 2023 AI Hackathon by Abdulrasheed Bolaji Lawal and Abdulgafar Tobi Jimoh
 
+## Requirements
+**Requires docker to be installed**
 
 ## Installation
 
