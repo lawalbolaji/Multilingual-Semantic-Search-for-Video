@@ -20,12 +20,13 @@ _Instructions on how to Install._
     ```sh
     cp .env.example .env
     ```
-4. Boot up your docker container:
+4. Update the variables in .env with your configurations
+5. Boot up your docker container:
    ```sh
    docker compose --env-file .env -f .docker-compose.yml up -d
    ```
-5. Client is now running at http://localhost:5317
-6. Server is now running at http://localhost:3100
+6. Client is now running at http://localhost:5317
+7. Server is now running at http://localhost:3100
 
 ### Note: You need to take some additional steps to authenticate with google servers for youtube access
    While docker is running, i.e after step 6:
