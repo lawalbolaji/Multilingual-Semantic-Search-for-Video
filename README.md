@@ -12,7 +12,7 @@ _Instructions on how to Install._
 1. Get a free API Key at [Cohere](https://cohere.com)
 2. Clone the repo
    ```sh
-   git clone https://github.com/your_username_/Project-Name.git
+   git clone https://github.com/lawalbolaji/Multilingual-Semantic-Search-for-Video
    ```
 3. In the project's root directory, run:
     ```sh
