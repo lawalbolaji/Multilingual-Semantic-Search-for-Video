@@ -32,7 +32,7 @@ _Instructions on how to Install._
    While docker is running, i.e after step 6:
  1. Run:
     ```sh
-    docker logs -f cohere-video-player-server
+    docker logs -f cohere_server
     ```
  2. Go to http://localhost:5317 in the browser
  3. In the video url search box, type in a valid youtube url
