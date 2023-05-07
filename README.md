@@ -16,7 +16,7 @@ _Instructions on how to Install._
    ```
 3. In the project's root directory, run:
     ```sh
-    cp .env.example .env.local
+    cp .env.example .env
     ```
 4. Boot up your docker container:
    ```sh
