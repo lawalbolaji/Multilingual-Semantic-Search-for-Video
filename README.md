@@ -25,7 +25,7 @@ _Instructions on how to Install._
    ```sh
    docker compose --env-file .env -f .docker-compose.yml up -d
    ```
-6. Client is now running at http://localhost:5317
+6. Client is now running at http://localhost:5173
 7. Server is now running at http://localhost:3100
 
 ### Note: You need to take some additional steps to authenticate with google servers for youtube access
