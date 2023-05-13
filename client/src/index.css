@@ -20,5 +20,7 @@ body,
 #root {
   width: 100%;
   height: 100%;
-  font-family: var(--sans-serif);
+  font-family: monospace;
+  background-color: #051021;
+  color: white;
 }

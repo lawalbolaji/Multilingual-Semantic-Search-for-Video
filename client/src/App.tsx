@@ -40,12 +40,6 @@ function App() {
   }, []);
 
   const videoJsOptions = React.useMemo(() => {
-    console.log({
-      type: videoMeta?.mimeType,
-      src: videoMeta?.src,
-      techOrder:
-        videoMeta?.mimeType === "video/youtube" ? ["youtube"] : undefined,
-    });
     return {
       autoplay: false,
       controls: true,
@@ -58,21 +52,21 @@ function App() {
         },
       ],
       techOrder:
-        videoMeta?.mimeType === "video/youtube" ? ["youtube"] : undefined,
+        videoMeta?.mimeType === "video/youtube" ? ["youtube"] : ["html5"],
     };
   }, [videoMeta]);
 
-  // const onFileLoad = React.useCallback((file?: File) => {
-  //   if (file !== undefined) {
-  //     setVideoMeta(() => ({
-  //       src: null,
-  //       mimeType: null,
-  //       isUploading: true,
-  //     }));
+  const onFileLoad = React.useCallback((file?: File) => {
+    if (file !== undefined) {
+      setVideoMeta(() => ({
+        src: null,
+        mimeType: null,
+        isUploading: true,
+      }));
 
-  //     handleFileUpload(file);
-  //   }
-  // }, []);
+      handleFileUpload(file);
+    }
+  }, []);
 
   const handleVidIndexQuery = (search: string) => {
     axios
@@ -126,35 +120,35 @@ function App() {
       });
   };
 
-  // const handleFileUpload = (file: File) => {
-  //   const formData = new FormData();
-  //   formData.append("file", file, file.name);
+  const handleFileUpload = (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file, file.name);
 
-  //   axios
-  //     .post("/upload", formData, {
-  //       baseURL: import.meta.env.VITE_API_ENDPOINT,
-  //       headers: { "Content-Type": file.type },
-  //     })
-  //     .then((res: AxiosResponse) => {
-  //       setVideoMeta((meta) => ({
-  //         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  //         ...meta!,
-  //         src: res.data.video.url,
-  //         mimeType: "video/mp4",
-  //         isUploading: false,
-  //       }));
-  //     })
-  //     .catch((err: any) => {
-  //       console.error(err);
-  //       setVideoMeta((meta) => ({
-  //         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  //         ...meta!,
-  //         src: null,
-  //         mimeType: null,
-  //         isUploading: false,
-  //       }));
-  //     });
-  // };
+    axios
+      .post("/upload", formData, {
+        baseURL: import.meta.env.VITE_API_ENDPOINT,
+        headers: { "Content-Type": file.type },
+      })
+      .then((res: AxiosResponse) => {
+        setVideoMeta((meta) => ({
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          ...meta!,
+          src: res.data.video.url,
+          mimeType: "video/mp4",
+          isUploading: false,
+        }));
+      })
+      .catch((err: any) => {
+        console.error(err);
+        setVideoMeta((meta) => ({
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          ...meta!,
+          src: null,
+          mimeType: null,
+          isUploading: false,
+        }));
+      });
+  };
 
   const handlePlayerReady = (player: Player) => {
     playerRef.current = player;
@@ -170,228 +164,283 @@ function App() {
   };
 
   return (
-    <div className="app-container">
+    <div
+      style={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        padding: "2em",
+        boxSizing: "border-box",
+      }}
+    >
       <div
-        className="video-container"
         style={{
-          paddingLeft: "1rem",
-          paddingRight: "1rem",
-          boxSizing: "border-box",
+          height: "40px",
+          padding: "1rem",
+          fontSize: "2.5em",
+          fontWeight: "600",
+          lineHeight: "40px",
+          marginBottom: "1rem",
         }}
       >
-        <div
-          className="getVidFromUrl"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-          }}
-        >
-          <div
-            style={{
-              fontSize: "3rem",
-              marginTop: "0.5rem",
-              marginBottom: "2rem",
-              fontWeight: 500,
-              textAlign: "left",
-              color: "var(--gray-600)",
-            }}
-          >
-            Video Url
-          </div>
-          <div
-            style={{
-              width: "90%",
-              boxSizing: "border-box",
-            }}
-          >
-            <TextField
-              fullWidth
-              label="video url"
-              id="fullWidth"
-              value={urlSearchVal}
-              onChange={(
-                e: React.SyntheticEvent<HTMLInputElement | HTMLTextAreaElement>
-              ) => {
-                setUrlSearchVal(e.currentTarget.value);
-              }}
-            />
-          </div>
-          <div
-            style={{
-              width: "40%",
-              boxSizing: "border-box",
-              display: "inline-flex",
-              marginTop: "1em",
-              marginBottom: "1em"
-            }}
-          >
-            <Button
-              variant="outlined"
-              onClick={() => {
-                handleUrlVidSearch(urlSearchVal);
-                setUrlSearchVal("");
-              }}
-              disabled={urlSearchVal.length < 1}
-            >
-              Get Video
-            </Button>
-          </div>
-        </div>
-        {/* <div
-          style={{
-            width: "100%",
-            display: "flex",
-            height: "100px",
-          }}
-        >
-          <FileUpload onFileLoad={onFileLoad} />
-        </div> */}
-
-        <div className="uploadVid">
-          {videoMeta !== undefined && videoMeta.isUploading ? (
-            <>
-              <Box sx={{ height: 40 }}>
-                <Fade
-                  in={videoMeta !== undefined && videoMeta.isUploading}
-                  style={{
-                    transitionDelay:
-                      videoMeta !== undefined && videoMeta.isUploading
-                        ? "800ms"
-                        : "0ms",
-                  }}
-                  unmountOnExit
-                >
-                  <CircularProgress />
-                </Fade>
-              </Box>
-            </>
-          ) : (
-            <></>
-          )}
-          {videoMeta !== undefined && videoMeta.src !== null ? (
-            <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />
-          ) : (
-            <></>
-          )}
-        </div>
+        Video Lookup
       </div>
-
-      <div
-        className="query-container"
-        style={{
-          paddingLeft: "1rem",
-          paddingRight: "1rem",
-          boxSizing: "border-box",
-        }}
-      >
+      <div className="app-container">
         <div
+          className="video-container"
           style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
+            paddingLeft: "1rem",
+            paddingRight: "1rem",
+            boxSizing: "border-box",
           }}
         >
           <div
+            className="getVidFromUrl"
             style={{
-              fontSize: "3rem",
-              marginTop: "0.5rem",
-              marginBottom: "2rem",
-              color: "var(--gray-600)",
-              fontWeight: 500,
-              textAlign: "left",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
             }}
           >
-            Search Query
-          </div>
-          <div
-            style={{
-              width: "90%",
-              boxSizing: "border-box",
-            }}
-          >
-            <TextField
-              value={searchQuery}
-              fullWidth
-              label="type your search here"
-              id="fullWidth"
-              onChange={(
-                e: React.SyntheticEvent<HTMLInputElement | HTMLTextAreaElement>
-              ) => {
-                setSearchQuery(e.currentTarget.value);
+            <div
+              style={{
+                fontSize: "2rem",
+                marginTop: "0.5rem",
+                marginBottom: "2rem",
+                fontWeight: 600,
+                textAlign: "left",
               }}
-            />
-          </div>
-          <div
-            style={{
-              width: "40%",
-              boxSizing: "border-box",
-              display: "inline-flex",
-              marginTop: "1em",
-            }}
-          >
-            <Button
-              variant="outlined"
-              onClick={() => {
-                handleVidIndexQuery(searchQuery);
-              }}
-              disabled={searchQuery.length < 1}
             >
-              Lookup
-            </Button>
+              Video Url
+            </div>
+            <Box
+              sx={{
+                width: "90%",
+                boxSizing: "border-box",
+                ".MuiInputBase-input": {
+                  borderRadius: "4px",
+                  background: "white",
+                },
+              }}
+            >
+              <TextField
+                fullWidth
+                id="fullWidth"
+                value={urlSearchVal}
+                onChange={(
+                  e: React.SyntheticEvent<
+                    HTMLInputElement | HTMLTextAreaElement
+                  >
+                ) => {
+                  setUrlSearchVal(e.currentTarget.value);
+                }}
+              />
+            </Box>
+            <Box
+              sx={{
+                width: "40%",
+                boxSizing: "border-box",
+                display: "inline-flex",
+                marginTop: "1em",
+                marginBottom: "1em",
+                ".Mui-disabled": {
+                  color: "white",
+                  borderColor: "darkgrey",
+                  background: "darkgrey",
+                },
+              }}
+            >
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  handleUrlVidSearch(urlSearchVal);
+                }}
+                disabled={urlSearchVal.length < 1}
+                sx={{
+                  textTransform: "capitalize",
+                  color: "white",
+                  borderColor: "darkgrey",
+                }}
+              >
+                Get Video
+              </Button>
+            </Box>
+          </div>
+          {/* <div
+            style={{
+              width: "100%",
+              display: "flex",
+              height: "100px",
+            }}
+          >
+            <FileUpload onFileLoad={onFileLoad} />
+          </div> */}
+
+          <div className="uploadVid" style={{ marginTop: "3rem" }}>
+            {videoMeta !== undefined && videoMeta.isUploading ? (
+              <>
+                <Box sx={{ height: 40 }}>
+                  <Fade
+                    in={videoMeta !== undefined && videoMeta.isUploading}
+                    style={{
+                      transitionDelay:
+                        videoMeta !== undefined && videoMeta.isUploading
+                          ? "800ms"
+                          : "0ms",
+                    }}
+                    unmountOnExit
+                  >
+                    <CircularProgress />
+                  </Fade>
+                </Box>
+              </>
+            ) : (
+              <></>
+            )}
+            {videoMeta !== undefined && videoMeta.src !== null ? (
+              <VideoPlayer
+                options={videoJsOptions}
+                onReady={handlePlayerReady}
+              />
+            ) : (
+              <></>
+            )}
           </div>
         </div>
+
         <div
+          className="query-container"
           style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
+            paddingLeft: "1rem",
+            paddingRight: "1rem",
+            boxSizing: "border-box",
           }}
         >
-          <div
-            style={{
-              fontSize: "3rem",
-              marginTop: "0.5rem",
-              marginBottom: "0.5rem",
-              fontWeight: 600,
-              width: "80%",
-              textAlign: "left",
-            }}
-          >
-            Results
-          </div>
-
-          <hr style={{ width: "100%" }} />
           <div
             style={{
               display: "flex",
               flexDirection: "column",
-              width: "100%",
+              alignItems: "flex-start",
             }}
           >
-            {searchResults.map((result, idx) => (
-              <React.Fragment key={idx}>
-                <div
-                  style={{
-                    display: "flex",
-                  }}
-                >
-                  <Button
-                    onClick={() => {
-                      if (playerRef.current)
-                        playerRef.current.currentTime(result.start);
-                    }}
-                    sx={{ textTransform: "capitalize" }}
+            <div
+              style={{
+                fontSize: "2rem",
+                marginTop: "0.5rem",
+                marginBottom: "2rem",
+                fontWeight: 600,
+                textAlign: "left",
+              }}
+            >
+              Search Query
+            </div>
+            <Box
+              sx={{
+                width: "90%",
+                boxSizing: "border-box",
+                ".MuiInputBase-input": {
+                  borderRadius: "4px",
+                  background: "white",
+                },
+              }}
+            >
+              <TextField
+                value={searchQuery}
+                fullWidth
+                id="fullWidth"
+                onChange={(
+                  e: React.SyntheticEvent<
+                    HTMLInputElement | HTMLTextAreaElement
                   >
-                    {formatDuration(result.start)} &nbsp; - &nbsp;{" "}
-                    {result.text.slice(0, 35)}
-                    {"..."}
-                  </Button>
-                </div>
+                ) => {
+                  setSearchQuery(e.currentTarget.value);
+                }}
+              />
+            </Box>
+            <Box
+              sx={{
+                width: "40%",
+                boxSizing: "border-box",
+                display: "inline-flex",
+                marginTop: "1em",
+                ".Mui-disabled": {
+                  color: "white",
+                  borderColor: "darkgray",
+                  background: "darkgrey",
+                },
+              }}
+            >
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  handleVidIndexQuery(searchQuery);
+                }}
+                disabled={searchQuery.length < 1}
+                sx={{
+                  textTransform: "capitalize",
+                  color: "white",
+                  borderColor: "darkgray",
+                }}
+              >
+                Lookup
+              </Button>
+            </Box>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "3rem",
+                marginTop: "3rem",
+                marginBottom: "0.5rem",
+                fontWeight: 600,
+                width: "80%",
+                textAlign: "left",
+              }}
+            >
+              Results
+            </div>
 
-                <hr style={{ width: "100%" }} />
-              </React.Fragment>
-            ))}
+            <hr style={{ width: "100%" }} />
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+                gap: "1em",
+                marginTop: "1em",
+              }}
+            >
+              {searchResults.map((result, idx) => (
+                <React.Fragment key={idx}>
+                  <div
+                    style={{
+                      display: "flex",
+                    }}
+                  >
+                    <Button
+                      onClick={() => {
+                        if (playerRef.current)
+                          playerRef.current.currentTime(result.start);
+                        playerRef.current?.play();
+                      }}
+                      sx={{ textTransform: "capitalize", fontSize: "1.2rem" }}
+                    >
+                      {formatDuration(result.start)} &nbsp; - &nbsp;{" "}
+                      {result.text.slice(0, 35)}
+                      {"..."}
+                    </Button>
+                  </div>
+
+                  <hr style={{ width: "100%" }} />
+                </React.Fragment>
+              ))}
+            </div>
           </div>
         </div>
       </div>
