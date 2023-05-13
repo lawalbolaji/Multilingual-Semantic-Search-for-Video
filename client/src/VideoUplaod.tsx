@@ -25,7 +25,7 @@ export default function FileUpload({ onFileLoad }: fileUploadProps) {
           aria-label="upload picture"
           component="label"
         >
-          <input hidden accept="image/*" type="file" />
+          <input hidden accept="video/*" type="file" />
           <VideoLibraryIcon />
         </IconButton>
       </Stack>
