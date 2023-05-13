@@ -27,4 +27,4 @@ def extract_segments(ser_deepgram_payload):
             word_segments.append(collection)
             collection = {"start": "", "end": "", "text": ""}
 
-    return word_segments
+    return [word for word in word_segments if len(word["text"].split(" ")) > 2]
