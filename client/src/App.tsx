@@ -183,7 +183,7 @@ function App() {
           marginBottom: "1rem",
         }}
       >
-        Video Lookup
+        Multilingual Semantic Search for Videos
       </div>
       <div className="app-container">
         <div
