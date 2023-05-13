@@ -32,7 +32,7 @@ def search_index(search: str):
     if len(doc_embeddings) < 1:
         return {"status_code": 200, "status_txt": "OK", "results": []}
 
-    good_matches = get_closest_match(search, doc_embeddings)
+    good_matches = get_closest_match(search, doc_embeddings)[:5]
 
     results = []
     for idx, match in enumerate(good_matches):
